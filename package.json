@@ -1,6 +1,6 @@
 {
   "name": "ecrcleaner",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Cleanup AWS ECR repository",
   "main": "ecrcleaner.js",
   "scripts": {
