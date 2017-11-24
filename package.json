@@ -1,0 +1,28 @@
+{
+  "name": "ecrcleaner",
+  "version": "0.0.1",
+  "description": "Cleanup AWS ECR repository",
+  "main": "ecrcleaner.js",
+  "scripts": {
+    "build": "yarn && mkdir -p build && rm -rf build/* && babel src -d build --presets eslatest-node6",
+    "prestart": "yarn build",
+    "start": "lambda-local -l build/index.js -e dev/event.js -t 10",
+    "prepackage": "yarn build && yarn install --production --modules-folder build/node_modules",
+    "package": "mkdir -p dist && rm -rf dist/* && cd build && zip -9r ../dist/ecr_cleaner.zip *"
+  },
+  "keywords": [
+    "aws"
+  ],
+  "author": "Antoine Deschênes",
+  "license": "MIT",
+  "dependencies": {
+    "semver": "^5.4.1"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.88.0",
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.25.0",
+    "babel-preset-eslatest-node6": "^1.0.1",
+    "lambda-local": "^1.4.2"
+  }
+}
