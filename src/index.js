@@ -94,17 +94,26 @@ const _filterOldImages = (images) => {
 
 	// Last 20 versions
 	const lastVersions = images
-		.filter(({imageTag: tag}) => tag && tag.startsWith("version-"))
+		.filter(({imageTag: tag}) => tag && tag.match(/^version-[0-9]+\.[0-9]+\.[0-9]+$/))
 		.sort(({imageTag: a}, {imageTag: b}) =>
 			semver.compare(a.replace(/^version-/, ''), b.replace(/^version-/, '')))
-		.slice(-20)
+		.slice(-30)
+		.map( ({imageDigest}) => imageDigest);
+
+	// Last 20 versions
+	const lastPrereleases = images
+		.filter(({imageTag: tag}) => tag && tag.match(/^version-[0-9]+\.[0-9]+\.[0-9]+-/))
+		.sort(({imageTag: a}, {imageTag: b}) =>
+			semver.compare(a.replace(/^version-/, ''), b.replace(/^version-/, '')))
+		.slice(-10)
 		.map( ({imageDigest}) => imageDigest);
 
 	// Return all non-matching images
 	return images.filter(
 		({imageDigest: digest}) =>
 			!pins.find(pinDigest => pinDigest === digest) &&
-			!lastVersions.find(versionDigest => versionDigest === digest)
+			!lastVersions.find(versionDigest => versionDigest === digest) &&
+			!lastPrereleases.find(versionDigest => versionDigest === digest)
 	);
 };
 
