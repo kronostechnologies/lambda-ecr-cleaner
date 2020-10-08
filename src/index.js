@@ -92,7 +92,7 @@ const _filterOldImages = (images) => {
 		.filter(({imageTag: tag}) => tag && !tag.startsWith("version-"))
 		.map( ({imageDigest}) => imageDigest);
 
-	// Last 20 versions
+	// Last 30 releases
 	const lastVersions = images
 		.filter(({imageTag: tag}) => tag && tag.match(/^version-[0-9]+\.[0-9]+\.[0-9]+$/))
 		.sort(({imageTag: a}, {imageTag: b}) =>
@@ -100,9 +100,17 @@ const _filterOldImages = (images) => {
 		.slice(-30)
 		.map( ({imageDigest}) => imageDigest);
 
-	// Last 20 versions
+	// Last 10 prereleases
 	const lastPrereleases = images
-		.filter(({imageTag: tag}) => tag && tag.match(/^version-[0-9]+\.[0-9]+\.[0-9]+-/))
+		.filter(({imageTag: tag}) => tag && tag.match(/^version-[0-9]+\.[0-9]+\.[0-9]+-[0-9]+/))
+		.sort(({imageTag: a}, {imageTag: b}) =>
+			semver.compare(a.replace(/^version-/, ''), b.replace(/^version-/, '')))
+		.slice(-10)
+		.map( ({imageDigest}) => imageDigest);
+
+	// Last 10 us prereleases
+	const lastUsPrereleases = images
+		.filter(({imageTag: tag}) => tag && tag.match(/^version-[0-9]+\.[0-9]+\.[0-9]+-us/))
 		.sort(({imageTag: a}, {imageTag: b}) =>
 			semver.compare(a.replace(/^version-/, ''), b.replace(/^version-/, '')))
 		.slice(-10)
@@ -113,7 +121,8 @@ const _filterOldImages = (images) => {
 		({imageDigest: digest}) =>
 			!pins.find(pinDigest => pinDigest === digest) &&
 			!lastVersions.find(versionDigest => versionDigest === digest) &&
-			!lastPrereleases.find(versionDigest => versionDigest === digest)
+			!lastPrereleases.find(versionDigest => versionDigest === digest) &&
+			!lastUsPrereleases.find(versionDigest => versionDigest === digest)
 	);
 };
 
