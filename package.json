@@ -1,6 +1,6 @@
 {
   "name": "ecrcleaner",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Cleanup AWS ECR repository",
   "main": "ecrcleaner.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "prestart": "yarn build",
     "start": "lambda-local -l build/index.js -e dev/event.js -t 10",
     "prepackage": "yarn build && yarn install --production --modules-folder build/node_modules",
-    "package": "mkdir -p dist && rm -rf dist/* && cd build && zip -9r ../dist/ecr_cleaner.zip *"
+    "package": "mkdir -p dist && rm -rf dist/* && cd build && zip -9r ../dist/ecr-cleaner.zip *"
   },
   "keywords": [
     "aws"
