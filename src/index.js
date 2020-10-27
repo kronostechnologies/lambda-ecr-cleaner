@@ -108,6 +108,22 @@ const _filterOldImages = (images) => {
 		.slice(-10)
 		.map( ({imageDigest}) => imageDigest);
 
+	// Last 10 dev prereleases
+	const lastDevPrereleases = images
+		.filter(({imageTag: tag}) => tag && tag.match(/^version-[0-9]+\.[0-9]+\.[0-9]+-dev/))
+		.sort(({imageTag: a}, {imageTag: b}) =>
+			semver.compare(a.replace(/^version-/, ''), b.replace(/^version-/, '')))
+		.slice(-10)
+		.map( ({imageDigest}) => imageDigest);
+	
+	// Last 10 accp prereleases
+	const lastAccpPrereleases = images
+		.filter(({imageTag: tag}) => tag && tag.match(/^version-[0-9]+\.[0-9]+\.[0-9]+-accp/))
+		.sort(({imageTag: a}, {imageTag: b}) =>
+			semver.compare(a.replace(/^version-/, ''), b.replace(/^version-/, '')))
+		.slice(-10)
+		.map( ({imageDigest}) => imageDigest);
+	
 	// Last 10 us prereleases
 	const lastUsPrereleases = images
 		.filter(({imageTag: tag}) => tag && tag.match(/^version-[0-9]+\.[0-9]+\.[0-9]+-us/))
@@ -122,6 +138,8 @@ const _filterOldImages = (images) => {
 			!pins.find(pinDigest => pinDigest === digest) &&
 			!lastVersions.find(versionDigest => versionDigest === digest) &&
 			!lastPrereleases.find(versionDigest => versionDigest === digest) &&
+			!lastDevPrereleases.find(versionDigest => versionDigest === digest) &&
+			!lastAccpPrereleases.find(versionDigest => versionDigest === digest) &&
 			!lastUsPrereleases.find(versionDigest => versionDigest === digest)
 	);
 };
